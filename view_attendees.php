@@ -98,7 +98,7 @@ echo '<div>
 			<tr bgcolor="#eeeeee">
 				<td><a href = "view_attendees.php?sort=id">ID</a></td>
 				<td><a href = "view_attendees.php?sort=fn">First Name</a></td>
-				<td><a href = "view_attendees.php?sort=ls">Last Name</a></td>
+				<td><a href = "view_attendees.php?sort=ln">Last Name</a></td>
 				<td><a href = "view_attendees.php?sort=title">Title</a></td>
 				<td><a href = "view_attendees.php?sort=city">City</a></td>
 				<td><a href = "view_attendees.php?sort=state">State</a></td>
