@@ -91,7 +91,7 @@ echo '<div>
 				//echo $atnd_detail."<br><br>";
 				//echo mysqli_num_rows($wrks_det_result). "<br><br>";
 				//setting the background color
-				echo $atnd_detail;
+				//echo $atnd_detail;
 				$bg = '#eeeeee';
 				//fetching the query		
 	echo '<table>

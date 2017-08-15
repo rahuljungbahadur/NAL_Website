@@ -11,12 +11,13 @@
 			include('db.php');
 			$atdn_detail  = "SELECT attendee.Attendee_id, attendee.first_name, ";
 			$atdn_detail .= "attendee.last_name, attendee.title, attendee.city, attendee.state, ";
-			$atdn_detail .= "attendee.zip_code, attendee.phone, attendee.email, attendee.IACUC_member_status as iacuc, attendee.principal_investigator as princ, attendee.experienced_db_searcher as db_search, organization.organization_name ";
+			$atdn_detail .= "attendee.zip_code, attendee.phone, attendee.email, attendee.IACUC_member_status as iacuc, attendee.principal_investigator as princ, ";
+			$atdn_detail .=	"attendee.experienced_db_searcher as db_search, organization.organization_name ";
 			$atdn_detail .= "FROM attendee ";
 			$atdn_detail .= "INNER JOIN organization ON attendee.attendee_orgID = organization.organization_id ";
 			$atdn_detail .= "WHERE attendee.Attendee_id = $aid;";
 			$atdn_det_result = @mysqli_query($dbc, $atdn_detail);
-			echo $atdn_detail;
+			//echo $atdn_detail;
 
 			echo '<table>';
 			while ($atdn = mysqli_fetch_array($atdn_det_result, MYSQLI_ASSOC)){
@@ -24,12 +25,12 @@
 				if(isset($_POST['first_name'])){
 					echo '<tr><td>First Name: <input type = "text" name = "first_name" size = "50" value = "'.$_POST['first_name'].'" required></input><br></td></tr>';
 				}else {
-					echo '<tr><td>Last Name: <input type = "text" name = "first_name" size = "50" value = "'.$atdn['first_name'].'" required></input><br></td></tr>';
+					echo '<tr><td>First Name: <input type = "text" name = "first_name" size = "50" value = "'.$atdn['first_name'].'" required></input><br></td></tr>';
 				}
 				if(isset($_POST['last_name'])){
-					echo '<tr><td>Start Date <input value = "'.$_POST['last_name'].'" name = "last_name" type = "text" required></input><br></td>';
+					echo '<tr><td>Last Name <input value = "'.$_POST['last_name'].'" name = "last_name" type = "text" required></input><br></td>';
 				}else {
-					echo '<tr><td>Start Date <input value = "'.$atdn['last_name'].'" name = "last_name" type = "text" required></input><br></td>';
+					echo '<tr><td>Last Name <input value = "'.$atdn['last_name'].'" name = "last_name" type = "text" required></input><br></td>';
 				}
 				if(isset($_POST['title'])){
 					echo '<td>Title <input type = "title" name = "title" value = "'.$_POST['title'].'" required></input></td></tr>';
@@ -39,7 +40,7 @@
 				if(isset($_POST['city'])){
 					echo '<tr><td>City <input type = "text" value = "'.$_POST['city'].'" name = "city" required></input></td>';
 				}else {
-					echo '<tr><td>city <input type = "text" value = "'.$atdn['city'].'" size = "50" name = "loc_addr" required></input></td>';
+					echo '<tr><td>City <input type = "text" value = "'.$atdn['city'].'" name = "city" required></input></td>';
 				}
 				if (isset($_POST['state'])){
 					echo '<tr><td>State <input type = "text" value = "'.$_POST['state'].'" name = "state" required></input></td>';
@@ -79,34 +80,39 @@
 					}	
 				}
 				if(isset($_POST['princ'])){
-					echo '<td>Principal Investigator: <input type = "radio" name = "princ" value = "'.$_POST['princ'].'"></input></td></tr>';
+					if($_POST['princ'] == 1){
+						echo '<tr><td>Principal Investigator: <input type = "radio" name = "princ" value = "1" checked>Yes</input>';
+						echo '<input type = "radio" name = "princ" value = "0">No</input>';
+					}else {
+						echo '<tr><td>Principal Investigator: <input type = "radio" name = "princ" value = "1">Yes</input>';
+						echo '<input type = "radio" name = "princ" value = "0" checked>No</input>';
+					}
 				}else {
-					echo '<td>Principal Investigator: <input type = "radio" name = "princ" value = "'.$atdn['princ'].'"></input></td></tr>';
+					if($atdn['princ'] == 1){
+						echo '<tr><td>Principal Investigator: <input type = "radio" name = "princ" value = "1" checked>Yes</input>';
+						echo '<input type = "radio" name = "princ" value = "0">No</input></td></tr>';
+					}else {
+						echo '<tr><td>Principal Investigator: <input type = "radio" name = "princ" value = "1">Yes</input>';
+						echo '<input type = "radio" name = "princ" value = "0" checked>No</input></td></tr>';							
+					}
 				}
 				if(isset($_POST['db_search'])){
-					echo '<td>Experienced Database searcher? <input type = "radio" name = "db_search" value = "'.$_POST['db_search'].'"></input></td></tr>';
-				}else {
-					echo '<td>Experienced Database searcher? <input type = "radio" name = "db_search" value = "'.$atdn['db_search'].'"></input></td></tr>';
-				}
-				echo '<tr><td> <select name = "atdn_type">';
-				//getting the list of attendee types
-				$wrks_sql = 'SELECT DISTINCT(workshop_type) as wrks_type FROM attendee';
-				$wrks_result = @mysqli_query($dbc,$wrks_sql);
-				while($wrks_type = mysqli_fetch_array($wrks_result, MYSQLI_ASSOC)){
-					if(isset($_POST['wrks_type'])){
-						if($_POST['wrks_type'] == $wrks_type['wrks_type']){
-							echo '<option value = "'.$wrks_type['wrks_type'].'" selected>'.$wrks_type['wrks_type'].'</option>';
-						}else {
-							echo '<option value = "'.$wrks_type['wrks_type'].'">'.$wrks_type['wrks_type'].'</option>';
-						}
+					if($_POST['db_search'] == 1){
+						echo '<tr><td>Experienced Database searcher? <input type = "radio" name = "db_search" value = "1" checked></input>';
+						echo '<input type = "radio" name = "db_search" value = "0">No</input></td></tr>';
 					}else {
-						if($atdn['workshop_type'] == $wrks_type['wrks_type']){
-							echo '<option value = "'.$wrks_type['wrks_type'].'" selected>'.$wrks_type['wrks_type'].'</option>';
-						}else {
-							echo '<option value = "'.$wrks_type['wrks_type'].'">'.$wrks_type['wrks_type'].'</option>';
-						}
+						echo '<tr><td>Experienced Database searcher? <input type = "radio" name = "db_search" value = "1"></input>';
+						echo '<input type = "radio" name = "db_search" value = "0" checked>No</input></td></tr>';
 					}
-				}			
+				}else {
+					if($atdn['db_search'] == 1){
+						echo '<td>Experienced Database searcher? <input type = "radio" name = "db_search" value = "1" checked></input>';
+						echo '<input type = "radio" name = "db_search" value = "0">No</input></td></tr>';
+					}else {
+						echo '<td>Experienced Database searcher? <input type = "radio" name = "db_search" value = "1"></input>';
+						echo '<input type = "radio" name = "db_search" value = "0" checked>No</input></td></tr>';
+					}
+				}		
 				//organization names
 				//echo '</td></tr></select name = "org_id">';
 				echo '<tr><td>Organization name<select name = "org_id">';
@@ -133,22 +139,18 @@
 			}
 			
 			//Update query
-			if(isset($_POST['topic'], $_POST['start_date'], $_POST['end_date'], $_POST['loc_addr'], $_POST['zip'])){
-				if($_POST['start_date'] <= $_POST['end_date']){
-					$wrks_upd = 'UPDATE attendee SET topic = "'.$_POST['topic'].'", start_date = "'.$_POST['start_date'].'", ';
-					$wrks_upd .= 'end_date = "'.$_POST['end_date'].'", location_address = "'.$_POST['loc_addr'].'", ';
-					$wrks_upd .= 'zip_code = "'.$_POST['zip'].'", workshop_type = "'.$_POST['wrks_type'].'", ';
-					$wrks_upd .= 'organization_id = "'.$_POST['org_id'].'", overall_rating = "'.$_POST['rating'].'", ';
-					$wrks_upd .= 'presentation_quality = "'.$_POST['presentation'].'", duration = "'.$_POST['duration'].'" WHERE workshop_id = '.$_POST['wid'].';';
-					//echo $wrks_upd;
-					if(@mysqli_query($dbc, $wrks_upd)){
-						echo '<tr><td><p style = "color:green">The Workshop details were successfully updated</p></td></tr>';
+			if(isset($_POST['first_name'], $_POST['last_name'], $_POST['title'], $_POST['city'], $_POST['state'])){
+					$atdn_upd = 'UPDATE attendee SET first_name = "'.$_POST['first_name'].'", last_name = "'.$_POST['last_name'].'", ';
+					$atdn_upd .= 'title = "'.$_POST['title'].'", city = "'.$_POST['city'].'", state = "'.$_POST['state'].'", ';
+					$atdn_upd .= 'zip_code = "'.$_POST['zip'].'", phone = "'.$_POST['phone'].'", email = "'.$_POST['email'].'", IACUC_member_status = '.$_POST['iacuc'].', ';
+					$atdn_upd .= 'principal_investigator = '.$_POST['princ'].', experienced_db_searcher = '.$_POST['db_search'].', attendee_orgID = '.$_POST['org_id'].' ';
+					$atdn_upd .= 'WHERE Attendee_id = '.$aid.';';
+					//echo $atdn_upd ;
+					if(@mysqli_query($dbc, $atdn_upd)){
+						echo '<tr><td><p style = "color:green">The Attendee details were successfully updated</p></td></tr>';
 					}else {
-						echo '<tr></td><p style = "color:red">There was an error in updating the attendee details</p></td></tr>';
+						echo '<tr></td><p style = "color:red">There was an error in updating the Attendee details</p></td></tr>';
 					}
-				}else {
-					echo '<tr><td><p style = "color:red;font-weight:bold">The Start Date should be less than or equal to the End Date</p></td></tr>';
-				}
 			}
 		echo '</form>';
 		?>
