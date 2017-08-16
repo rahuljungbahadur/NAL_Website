@@ -106,7 +106,9 @@
 			}
 		}
 		echo '</select></td></tr>';
-		echo '<tr><td><input type = "submit" value = "Add Attendee"></input></td></tr>';
+		echo '<tr><td><input type = "submit" value = "Add Attendee"></input></td>';
+			echo '<td><a href="view_attendees.php?start=0&page=5&sort=Attendee_id">
+			<input type="button" value="View Attendees" /></td></tr>';
 		if(isset($_POST['fst_name'], $_POST['lst_name'], $_POST['title'], $_POST['city'], $_POST['zip'], $_POST['phone'], $_POST['email'])){
 			$attendee_query  = 'INSERT INTO attendee (first_name, last_name, title, city, state, zip_code, phone, email, IACUC_member_status, principal_investigator, experienced_db_searcher, attendee_orgID) ';
 			$attendee_query .= 'VALUES("'.$_POST['fst_name'].'", "'.$_POST['lst_name'].'", "'.$_POST['title'].'", "'.$_POST['city'].'", "'.$_POST['state'].'", '.$_POST['zip'].', '.$_POST['phone'].', "'.$_POST['email'].'", '.$_POST['iacuc'].', ';

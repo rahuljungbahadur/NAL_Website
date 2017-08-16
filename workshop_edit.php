@@ -102,7 +102,9 @@
 				}else {
 					echo '<tr><td>Duration <input type = "text" name = "duration" value = "'.$wrks['duration'].'"></input></td></tr>';
 				}
-				echo '<tr><td><input type = "submit" value = "update"></input></td></tr>';
+				echo '<tr><td><input type = "submit" value = "update"></input></td>';
+					echo '<td><a href="view_workshops.php?start=0&page=5&sort=workshop_id">
+   <input type="button" value="Go Back" /></td></tr>';
 			}
 			
 			//Update query

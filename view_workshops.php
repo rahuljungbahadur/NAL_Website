@@ -102,6 +102,7 @@ echo '<div>
 				<td>Edit Details</td>
 				<td>Delete</td>
 				<td>View Attendees</a></td>
+				<td>Add Attendees</a></td>
 			</tr>';
 				while($wrks = mysqli_fetch_array($wrks_det_result, MYSQLI_ASSOC)){
 					$bg = ($bg =='#eeeeee' ? '#ffffff' :'#eeeeee'); // Switch the background color.
@@ -118,8 +119,9 @@ echo '<div>
 					echo '<td>'.$wrks['presentation_quality'].'</td>';
 					echo '<td>'.$wrks['duration'].'</td>';
 					echo '<td><a href = "workshop_edit.php?wid='.$wrks['workshop_id'].'" target = "#">Edit</a></td>';
-					echo '<td><a href = "workshop_delete.php?wid='.$wrks['workshop_id'].'" target = "#">Delete</a></td>';
-					echo '<td><a href = "workshop_attendee.php?wid='.$wrks['workshop_id'].'&w_name='.$wrks['topic'].'" target = "#">View Attendees</a></td>';
+					echo '<td><a href = "workshop_delete.php?wid='.$wrks['workshop_id'].'&w_name='.$wrks['topic'].'" target = "#">Delete</a></td>';
+					echo '<td><a href = "wrks_atnd.php?wid='.$wrks['workshop_id'].'&w_name='.$wrks['topic'].'" target = "#">View </a></td>';
+					echo '<td><a href = "add_atnd_wrks.php?wid='.$wrks['workshop_id'].'&w_name='.$wrks['topic'].'&start=0&page=5" target = "#">Add </a></td>';
 					echo '</tr>';
 				}
 				//mysqli_free_result ($row_result);

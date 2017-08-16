@@ -7,7 +7,7 @@ echo '<div>
 				include("db.php");
 				//pages and display
 				$display = 5;
-				//echo '<form action = "workshop_attendee.php?s=$start&p=$pages" method = "get">';
+				//echo '<form action = "wrks_atnd.php?s=$start&p=$pages" method = "get">';
 				//$start = $_GET['start'];
 				//$pages = $_GET['pages'];
 				if(isset($_GET['wid'], $_GET['w_name'])){
@@ -25,7 +25,7 @@ echo '<div>
 				if(isset($_GET['page']) && is_numeric($_GET['page'])){
 					$page = $_GET['page'];
 				}else{
-					$row = 'SELECT COUNT(Attendee_Attendee_id) FROM works_atnd'.$w_id.';';
+					$row = 'SELECT COUNT(Attendee_Attendee_id) FROM workshop_has_attendee WHERE Workshop_workshop_id = '.$w_id.';';
 					//echo $row;
 					$row_result = @mysqli_query($dbc, $row);
 					if(mysqli_num_rows($row_result) == 0){
@@ -92,42 +92,40 @@ echo '<div>
 				}
 				//echo $order_by;
 				//fetching the list of attendees
-				
+				$wrks_atnd = "SELECT attendee.Attendee_id attendee.
+				";
 				//creating a view
-				$view  = "CREATE VIEW works_atnd$w_id AS ";
-				$view .= "SELECT workshop_has_attendee.Attendee_Attendee_id, attendee.first_name,attendee.last_name, attendee.title, attendee.city, attendee.state, attendee.zip_code, ";
+				$view  = "SELECT workshop_has_attendee.Attendee_Attendee_id, attendee.first_name,attendee.last_name, attendee.title, attendee.city, attendee.state, attendee.zip_code, ";
 				$view .= "attendee.phone, attendee.email, attendee.IACUC_member_status, attendee.principal_investigator, attendee.experienced_db_searcher, organization.organization_name ";
 				$view .= "FROM workshop_has_attendee INNER JOIN attendee ON workshop_has_attendee.Attendee_Attendee_id = attendee.Attendee_id ";
-				$view .= "INNER JOIN organization ON attendee.attendee_orgID = organization.organization_id WHERE workshop_has_attendee.Workshop_workshop_id = $w_id;";
+				$view .= "INNER JOIN organization ON attendee.attendee_orgID = organization.organization_id WHERE workshop_has_attendee.Workshop_workshop_id = $w_id ORDER BY $order_by ";
+				$view .= "LIMIT $start, $display;";
 				//echo $view. '<br>';
-				if(@mysqli_query($dbc, $view)){
-					echo "<p style = 'color:green'> View Successfully Generated</p>";
-				}
-				$waid  = "SELECT * FROM works_atnd$w_id ORDER BY $order_by LIMIT $start, $display;";
+				//$waid  = "SELECT * FROM works_atnd$w_id ORDER BY $order_by LIMIT $start, $display;";
 				//echo $waid;
 				echo '<h3>Attendees registered for this workshop:</h3>';
-				$waID_result = @mysqli_query($dbc, $waid);
+				$view_result = @mysqli_query($dbc, $view);
 						$bg = '#eeeeee';
 								//fetching the query		
 					echo '<table>
 							<tr bgcolor="#eeeeee">
-								<td><a href = "workshop_attendee.php?sort=id&wid='.$w_id.'&w_name='.$w_name.'">ID</a></td>
-								<td><a href = "workshop_attendee.php?sort=fn&wid='.$w_id.'&w_name='.$w_name.'">First Name</a></td>
-								<td><a href = "workshop_attendee.php?sort=ln&wid='.$w_id.'&w_name='.$w_name.'">Last Name</a></td>
-								<td><a href = "workshop_attendee.php?sort=title&wid='.$w_id.'&w_name='.$w_name.'">Title</a></td>
-								<td><a href = "workshop_attendee.php?sort=city&wid='.$w_id.'&w_name='.$w_name.'">City</a></td>
-								<td><a href = "workshop_attendee.php?sort=state&wid='.$w_id.'&w_name='.$w_name.'">State</a></td>
-								<td><a href = "workshop_attendee.php?sort=zip&wid='.$w_id.'&w_name='.$w_name.'">Zip Code</a></td>
-								<td><a href = "workshop_attendee.php?sort=phone&wid='.$w_id.'&w_name='.$w_name.'">Phone</a></td>
-								<td><a href = "workshop_attendee.php?sort=email&wid='.$w_id.'&w_name='.$w_name.'">Email</a></td>
-								<td><a href = "workshop_attendee.php?sort=iacuc&wid='.$w_id.'&w_name='.$w_name.'">IACUC Member</a></td>
-								<td><a href = "workshop_attendee.php?sort=princ&wid='.$w_id.'&w_name='.$w_name.'">Principal Investigator?</a></td>
-								<td><a href = "workshop_attendee.php?sort=db_search&wid='.$w_id.'&w_name='.$w_name.'">Database Experience</a></td>
-								<td><a href = "workshop_attendee.php?sort=org_id&wid='.$w_id.'&w_name='.$w_name.'">Organization</a></td>
+								<td><a href = "wrks_atnd.php?sort=id&wid='.$w_id.'&w_name='.$w_name.'">ID</a></td>
+								<td><a href = "wrks_atnd.php?sort=fn&wid='.$w_id.'&w_name='.$w_name.'">First Name</a></td>
+								<td><a href = "wrks_atnd.php?sort=ln&wid='.$w_id.'&w_name='.$w_name.'">Last Name</a></td>
+								<td><a href = "wrks_atnd.php?sort=title&wid='.$w_id.'&w_name='.$w_name.'">Title</a></td>
+								<td><a href = "wrks_atnd.php?sort=city&wid='.$w_id.'&w_name='.$w_name.'">City</a></td>
+								<td><a href = "wrks_atnd.php?sort=state&wid='.$w_id.'&w_name='.$w_name.'">State</a></td>
+								<td><a href = "wrks_atnd.php?sort=zip&wid='.$w_id.'&w_name='.$w_name.'">Zip Code</a></td>
+								<td><a href = "wrks_atnd.php?sort=phone&wid='.$w_id.'&w_name='.$w_name.'">Phone</a></td>
+								<td><a href = "wrks_atnd.php?sort=email&wid='.$w_id.'&w_name='.$w_name.'">Email</a></td>
+								<td><a href = "wrks_atnd.php?sort=iacuc&wid='.$w_id.'&w_name='.$w_name.'">IACUC Member</a></td>
+								<td><a href = "wrks_atnd.php?sort=princ&wid='.$w_id.'&w_name='.$w_name.'">Principal Investigator?</a></td>
+								<td><a href = "wrks_atnd.php?sort=db_search&wid='.$w_id.'&w_name='.$w_name.'">Database Experience</a></td>
+								<td><a href = "wrks_atnd.php?sort=org_id&wid='.$w_id.'&w_name='.$w_name.'">Organization</a></td>
 								<!--<td>Edit Details</td>-->
-								<td>Delete</td>
+								<td>Remove</td>
 							</tr>';
-				while($waid = mysqli_fetch_array($waID_result, MYSQLI_ASSOC)){
+				while($waid = mysqli_fetch_array($view_result, MYSQLI_ASSOC)){
 					//query
 					//echo $waid;
 							$bg = ($bg =='#eeeeee' ? '#ffffff' :'#eeeeee'); // Switch the background color.
@@ -145,6 +143,7 @@ echo '<div>
 							echo '<td>'.$waid['principal_investigator'].'</td>';
 							echo '<td>'.$waid['experienced_db_searcher'].'</td>';
 							echo '<td>'.$waid['organization_name'].'</td>';
+							echo '<td><a href = "wrks_atnd_remove.php?a_id='.$waid['Attendee_Attendee_id'].'&w_id='.$w_id.'&w_name='.$w_name.'" target = "#">Remove</a></td>';
 							//echo '<td><a href = "attendee_edit.php?aid='.$waid['Attendee_id'].'" target = "#">Edit</a></td>';
 							//echo '<td><a href = "attendee_delete.php?aid='.$waid['Attendee_id'].'" target = "#">Delete</a></td>';
 							echo '</tr>';
@@ -164,16 +163,16 @@ echo '<div>
 			$cur_page = ($start/$display) + 1;
 			//If not the first page then a previous link is created
 			if($cur_page > 1){
-				echo '<a href = "workshop_attendee.php?start='.($start-$display).'&page='.$page.'&sort='.$sort.'&wid='.$w_id.'&w_name='.$w_name.'">Previous</a>';
+				echo '<a href = "wrks_atnd.php?start='.($start-$display).'&page='.$page.'&sort='.$sort.'&wid='.$w_id.'&w_name='.$w_name.'">Previous</a>';
 			}
 			//creating the numbered pages
 			for($i=1; $i<=$page; $i++){
-				echo '<a href = "workshop_attendee.php?start='.$display * ($i-1).'&page='.$page.'&sort='.$sort.'&wid='.$w_id.'&w_name='.$w_name.'">&nbsp;'.$i .'&nbsp;</a>';
+				echo '<a href = "wrks_atnd.php?start='.$display * ($i-1).'&page='.$page.'&sort='.$sort.'&wid='.$w_id.'&w_name='.$w_name.'">&nbsp;'.$i .'&nbsp;</a>';
 			}
 
 			//creating the next button
 			if($cur_page < $page){
-				echo '<a href= "workshop_attendee.php?start='.($start+$display).'&page='.$page.'&sort='.$sort.'&wid='.$w_id.'&w_name='.$w_name.'">Next</a>';
+				echo '<a href= "wrks_atnd.php?start='.($start+$display).'&page='.$page.'&sort='.$sort.'&wid='.$w_id.'&w_name='.$w_name.'">Next</a>';
 			}
 			//echo '</p></td></tr>';
 			/* $drp_view = "DROP VIEW IF EXISTS `nal`.`works_atnd`;";
@@ -185,11 +184,10 @@ echo '<div>
 				echo 'something is wrong';
 			}		 */	
 			echo '<tr>
-				
-				
-			</tr>
+			<td><a href="view_workshops.php">
+				<input type="button" value="Go Back" /></td></tr>';
 
-		</table>
+echo '</table>
 	</div>';
 ?>
 </html>
